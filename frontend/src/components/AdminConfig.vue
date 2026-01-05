@@ -256,54 +256,67 @@ onMounted(fetchConfig);
   align-items: center;
 }
 
-.input-dynamic { flex: 2; }
-.input-small { width: 100px; }
+/* Improved Inputs */
+.config-section input[type="text"],
+.config-section input[type="number"],
+.config-section select,
+.input-dynamic,
+.input-small {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+}
 
-.btn-small {
-  background: var(--secondary-color);
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
-  cursor: pointer;
+.config-section input:focus,
+.config-section select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+}
+
+.input-dynamic { flex: 2; }
+.input-small { width: 120px; } /* Slightly wider */
+
+/* Improved Back Button */
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 20px;
+  text-decoration: none;
+  color: #555;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-back:hover {
+  background: #f8f9fa;
+  border-color: #ccc;
+  color: #333;
 }
 
 .btn-icon-trash {
-  background: none;
-  border: none;
+  background: white;
+  border: 1px solid #fee;
+  color: #dc3545;
   cursor: pointer;
-  font-size: 1.2rem;
-}
-
-.item-card {
-  background: #f8f9fa;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  border: 1px solid #eee;
-}
-
-.form-grid-mini {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-}
-
-.actions-row {
+  font-size: 1rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
   display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-  font-size: 0.9rem;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
 }
 
-.btn-text-danger {
-  color: var(--error-color);
-  background: none;
-  border: none;
-  cursor: pointer;
-  text-decoration: underline;
+.btn-icon-trash:hover {
+  background-color: #fff5f5;
+  border-color: #dc3545;
+  transform: translateY(-1px);
 }
-
-.muted-text { color: #888; font-size: 0.9rem; }
-.btn-back { display: inline-block; padding: 10px 20px; text-decoration: none; color: #555; background: #eee; border-radius: 5px; }
 </style>
