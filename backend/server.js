@@ -10,6 +10,7 @@ const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
 // Model
 const Inscricao = require('./models/Inscricao');
+const Config = require('./models/Config');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
