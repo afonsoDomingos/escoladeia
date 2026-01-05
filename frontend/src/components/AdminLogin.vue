@@ -34,8 +34,6 @@ import axios from 'axios';
 
 const username = ref('');
 const password = ref('');
-const username = ref('');
-const password = ref('');
 const error = ref('');
 const router = useRouter();
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';

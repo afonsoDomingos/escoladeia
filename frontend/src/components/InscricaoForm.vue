@@ -103,7 +103,6 @@ const form = ref({
 const file = ref(null);
 const message = ref('');
 const messageType = ref(''); // 'success' or 'error'
-const messageType = ref(''); // 'success' or 'error'
 const loading = ref(false);
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
