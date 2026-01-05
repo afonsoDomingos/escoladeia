@@ -52,12 +52,18 @@
 
       <!-- Seção: Comportamento -->
       <div class="card config-section">
-        <h3>Pós-Inscrição (Redirecionamento)</h3>
-        <div class="form-group">
-          <label>Link para Grupo/Site (Opcional)</label>
-          <input v-model="config.redirectUrl" type="text" placeholder="https://chat.whatsapp.com/..." class="full-width">
-          <small class="muted-text">Se preenchido, o aluno verá um botão para acessar este link após se inscrever com sucesso.</small>
+        <h3>Ações e Suporte</h3>
+        <div class="form-grid-mini">
+          <div class="form-group">
+            <label>Link de Redirecionamento (WhatsApp/Site)</label>
+            <input v-model="config.redirectUrl" type="text" placeholder="https://chat.whatsapp.com/..." class="full-width">
+          </div>
+          <div class="form-group">
+            <label>Número para Informações (Ex: +258...)</label>
+            <input v-model="config.contactPhone" type="text" placeholder="+258 84 000 0000" class="full-width">
+          </div>
         </div>
+        <small class="muted-text">O link aparece no topo e após a inscrição. O número aparece na mensagem de sucesso.</small>
       </div>
 
       <!-- Seção: Personalizar Etiquetas -->
@@ -156,6 +162,7 @@ const config = ref({
   primaryColor: '#FF6600',
   logoUrl: '/logo.jpg',
   redirectUrl: '',
+  contactPhone: '',
   labels: { nome: 'Nome Completo', email: 'Email', nivel: 'Nível', curso: 'Curso' }
 });
 
@@ -178,7 +185,8 @@ const fetchConfig = async () => {
       labels: data.labels || { nome: 'Nome Completo', email: 'Email', nivel: 'Nível', curso: 'Curso' },
       logoUrl: data.logoUrl || '/logo.jpg',
       primaryColor: data.primaryColor || '#FF6600',
-      redirectUrl: data.redirectUrl || ''
+      redirectUrl: data.redirectUrl || '',
+      contactPhone: data.contactPhone || ''
     };
 
   } catch (error) {

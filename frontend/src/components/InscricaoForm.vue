@@ -11,10 +11,12 @@
         <p class="subtitle">{{ config.subtitulo || 'Inscrição no Treinamento' }}</p>
         
         <!-- Join Link in Header (Pre-Enrollment) -->
-        <div v-if="config.redirectUrl" class="header-action-row">
-          <a :href="config.redirectUrl" target="_blank" class="btn-whatsapp-outline">
-            <span>💬</span> Entrar no Grupo / Comunidade
-          </a>
+        <div v-if="!messageType || messageType !== 'success'">
+          <div v-if="config.redirectUrl" class="header-action-row">
+            <a :href="config.redirectUrl" target="_blank" class="btn-whatsapp-outline">
+              <span>💬</span> Entrar no Grupo / Comunidade
+            </a>
+          </div>
         </div>
       </div>
 
@@ -89,12 +91,19 @@
           <!-- Feedback Messages -->
           <div v-if="message" :class="['feedback', messageType]">
             <p>{{ message }}</p>
-            <a v-if="messageType === 'success' && config.redirectUrl" 
-               :href="config.redirectUrl" 
-               target="_blank" 
-               class="btn-redirect fade-in">
-               🚀 Entrar no Grupo / Acessar Link
-            </a>
+            
+            <div v-if="messageType === 'success'" class="success-actions-block">
+               <p v-if="config.contactPhone" class="contact-prompt">
+                 📞 Mais informações: <strong>{{ config.contactPhone }}</strong>
+               </p>
+               
+               <div class="success-btns">
+                 <a v-if="config.redirectUrl" :href="config.redirectUrl" target="_blank" class="btn-redirect">
+                   🚀 Entrar no Grupo
+                 </a>
+                 <button @click="resetFormState" class="btn-secondary">Fazer Nova Inscrição</button>
+               </div>
+            </div>
           </div>
 
           <button v-if="messageType !== 'success'" type="submit" class="btn" :disabled="loading">
@@ -131,6 +140,7 @@ const config = ref({
     primaryColor: '#FF6600',
     logoUrl: '/logo.jpg',
     redirectUrl: '',
+    contactPhone: '',
     labels: {} 
 });
 const loadingConfig = ref(true);

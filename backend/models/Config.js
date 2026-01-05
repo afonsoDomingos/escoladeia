@@ -20,6 +20,7 @@ const configSchema = new mongoose.Schema({
 
     // Behavior
     redirectUrl: { type: String, default: '' },
+    contactPhone: { type: String, default: '' },
 
     // Fixed Fields Customization (Labels)
     labels: {
