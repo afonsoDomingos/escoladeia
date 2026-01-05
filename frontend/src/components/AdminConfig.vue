@@ -248,9 +248,10 @@ onMounted(fetchConfig);
   gap: 10px;
 }
 
+
 .config-section {
-  margin-bottom: 25px;
-  padding: 25px;
+  margin-bottom: 20px;
+  padding: 20px;
 }
 
 .section-header {
@@ -258,6 +259,8 @@ onMounted(fetchConfig);
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .item-row {
