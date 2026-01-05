@@ -56,6 +56,35 @@
       </div>
     </div>
 
+    <!-- Detailed Stats Charts -->
+    <div class="stats-details-grid" v-if="inscricoes.length > 0">
+      <div class="card stat-box">
+         <h4>Inscrições por Curso</h4>
+         <div v-for="(count, curso) in byCourse" :key="curso" class="stat-row">
+            <div class="stat-label">
+               <span>{{ curso }}</span>
+               <span class="muted-sm">{{ count }} ({{ Math.round(count/inscricoes.length*100) }}%)</span>
+            </div>
+            <div class="progress-bar-bg">
+               <div class="progress-bar-fill" :style="{ width: (count/inscricoes.length*100) + '%' }"></div>
+            </div>
+         </div>
+      </div>
+      
+      <div class="card stat-box">
+         <h4>Nível de Conhecimento</h4>
+         <div v-for="(count, nivel) in byLevel" :key="nivel" class="stat-row">
+            <div class="stat-label">
+                <span>{{ nivel }}</span>
+                <span class="muted-sm">{{ count }}</span>
+            </div>
+            <div class="progress-bar-bg">
+               <div class="progress-bar-fill fill-secondary" :style="{ width: (count/inscricoes.length*100) + '%' }"></div>
+            </div>
+         </div>
+      </div>
+    </div>
+
     <div v-if="loading" class="loading">Carregando dados...</div>
     <div v-else-if="inscricoes.length === 0" class="empty">Nenhuma inscrição encontrada.</div>
 
@@ -127,6 +156,22 @@ const totalRevenue = computed(() => {
     .filter(i => i.status === 'aprovado')
     .reduce((sum, i) => sum + (i.valor || 0), 0)
     .toLocaleString('pt-MZ');
+});
+
+const byCourse = computed(() => {
+    const stats = {};
+    inscricoes.value.forEach(i => {
+        stats[i.curso] = (stats[i.curso] || 0) + 1;
+    });
+    return stats;
+});
+
+const byLevel = computed(() => {
+    const stats = {};
+    inscricoes.value.forEach(i => {
+        stats[i.nivel] = (stats[i.nivel] || 0) + 1;
+    });
+    return stats;
 });
 
 const fetchInscricoes = async () => {
@@ -301,5 +346,58 @@ onUnmounted(() => {
 }
 
 .actions { display: flex; gap: 10px; }
-.action-done { font-size: 0.9em; color: var(--text-light); }
+
+.stats-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-box {
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.stat-box h4 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  font-size: 1.1rem;
+}
+
+.stat-row {
+  margin-bottom: 15px;
+}
+
+.stat-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+}
+
+.muted-sm { color: #888; font-size: 0.8em; }
+
+.progress-bar-bg {
+  width: 100%;
+  height: 8px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: var(--primary-color);
+  border-radius: 4px;
+  transition: width 1s ease-in-out;
+}
+
+.fill-secondary {
+  background-color: #6c757d; /* Grey/Blue for Levels */
+}
 </style>
