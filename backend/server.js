@@ -86,11 +86,11 @@ app.get('/config', async (req, res) => {
 // Update Configuration (Admin)
 app.post('/admin/config', async (req, res) => {
     try {
-        const { titulo, subtitulo, cursos, camposExtras, primaryColor, logoUrl, labels } = req.body;
+        const { titulo, subtitulo, cursos, camposExtras, primaryColor, logoUrl, labels, redirectUrl } = req.body;
 
         // Update the single config document
         await Config.findOneAndUpdate({}, {
-            titulo, subtitulo, cursos, camposExtras, primaryColor, logoUrl, labels
+            titulo, subtitulo, cursos, camposExtras, primaryColor, logoUrl, labels, redirectUrl
         }, { upsert: true });
 
         res.json({ success: true, message: 'Configuração atualizada!' });

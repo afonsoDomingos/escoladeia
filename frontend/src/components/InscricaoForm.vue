@@ -81,11 +81,21 @@
 
           <!-- Feedback Messages -->
           <div v-if="message" :class="['feedback', messageType]">
-            {{ message }}
+            <p>{{ message }}</p>
+            <a v-if="messageType === 'success' && config.redirectUrl" 
+               :href="config.redirectUrl" 
+               target="_blank" 
+               class="btn-redirect fade-in">
+               🚀 Entrar no Grupo / Acessar Link
+            </a>
           </div>
 
-          <button type="submit" class="btn" :disabled="loading">
+          <button v-if="messageType !== 'success'" type="submit" class="btn" :disabled="loading">
             {{ loading ? 'Enviando...' : 'Confirmar Inscrição' }}
+          </button>
+          
+          <button v-else @click="resetFormState" type="button" class="btn btn-secondary">
+            Nova Inscrição
           </button>
         </form>
       </div>
@@ -210,6 +220,18 @@ const submitForm = async () => {
   } finally {
     loading.value = false;
   }
+};
+
+const resetFormState = () => {
+    message.value = '';
+    messageType.value = '';
+    form.value = { nome: '', email: '', nivel: '', curso: '', valor: 0 };
+    file.value = null;
+    if (document.getElementById('comprovativo')) {
+        document.getElementById('comprovativo').value = ''; 
+    }
+    // Reset extras
+    Object.keys(extras.value).forEach(key => extras.value[key] = '');
 };
 </script>
 

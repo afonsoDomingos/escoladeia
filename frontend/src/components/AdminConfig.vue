@@ -50,6 +50,16 @@
         </div>
       </div>
 
+      <!-- Seção: Comportamento -->
+      <div class="card config-section">
+        <h3>Pós-Inscrição (Redirecionamento)</h3>
+        <div class="form-group">
+          <label>Link para Grupo/Site (Opcional)</label>
+          <input v-model="config.redirectUrl" type="url" placeholder="https://chat.whatsapp.com/..." class="full-width">
+          <small class="muted-text">Se preenchido, o aluno verá um botão para acessar este link após se inscrever com sucesso.</small>
+        </div>
+      </div>
+
       <!-- Seção: Personalizar Etiquetas -->
       <div class="card config-section">
         <h3>Personalizar Campos Fixos (Etiquetas)</h3>
@@ -157,7 +167,8 @@ const fetchConfig = async () => {
       camposExtras: response.data.camposExtras || [],
       labels: response.data.labels || { nome: 'Nome Completo', email: 'Email', nivel: 'Nível', curso: 'Curso' },
       logoUrl: response.data.logoUrl || '/logo.jpg',
-      primaryColor: response.data.primaryColor || '#FF6600'
+      primaryColor: response.data.primaryColor || '#FF6600',
+      redirectUrl: response.data.redirectUrl || ''
     };
 
   } catch (error) {

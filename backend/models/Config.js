@@ -18,6 +18,9 @@ const configSchema = new mongoose.Schema({
     primaryColor: { type: String, default: '#FF6600' },
     logoUrl: { type: String, default: '/logo.jpg' },
 
+    // Behavior
+    redirectUrl: { type: String, default: '' },
+
     // Fixed Fields Customization (Labels)
     labels: {
         nome: { type: String, default: 'Nome Completo' },

@@ -242,7 +242,34 @@ h3 {
   color: #00bfa5;
 }
 
-.btn-cross {
-  background-color: #fff5f5;
-  color: #ff5252;
+
+/* Redirect Button Styling */
+.btn-redirect {
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin-top: 15px;
+  padding: 12px;
+  background-color: #25D366;
+  /* WhatsApp Green */
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: transform 0.2s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-redirect:hover {
+  transform: translateY(-2px);
+  background-color: #1ebc57;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  margin-top: 10px;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
 }
