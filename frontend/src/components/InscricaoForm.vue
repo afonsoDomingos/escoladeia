@@ -104,7 +104,7 @@ const file = ref(null);
 const message = ref('');
 const messageType = ref(''); // 'success' or 'error'
 const loading = ref(false);
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3000').trim();
 
 const cursos = [
   { nome: 'IA na Programação', valor: 2500, desc: '3 módulos, 10 aulas/módulo (10min). Certificado incluso.' },
