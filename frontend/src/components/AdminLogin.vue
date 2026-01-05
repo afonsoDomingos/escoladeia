@@ -34,12 +34,15 @@ import axios from 'axios';
 
 const username = ref('');
 const password = ref('');
+const username = ref('');
+const password = ref('');
 const error = ref('');
 const router = useRouter();
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 const login = async () => {
   try {
-    const response = await axios.post('http://localhost:3000/admin/login', {
+    const response = await axios.post(`${API_URL}/admin/login`, {
       username: username.value,
       password: password.value
     });

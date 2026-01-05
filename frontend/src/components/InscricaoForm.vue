@@ -103,7 +103,9 @@ const form = ref({
 const file = ref(null);
 const message = ref('');
 const messageType = ref(''); // 'success' or 'error'
+const messageType = ref(''); // 'success' or 'error'
 const loading = ref(false);
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 const cursos = [
   { nome: 'IA na Programação', valor: 2500, desc: '3 módulos, 10 aulas/módulo (10min). Certificado incluso.' },
@@ -152,7 +154,7 @@ const submitForm = async () => {
   formData.append('comprovativo', file.value);
 
   try {
-    const response = await axios.post('http://localhost:3000/inscricao', formData, {
+    const response = await axios.post(`${API_URL}/inscricao`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
     message.value = response.data.message;

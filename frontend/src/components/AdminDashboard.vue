@@ -64,10 +64,11 @@ import axios from 'axios';
 const inscricoes = ref([]);
 const loading = ref(true);
 const router = useRouter();
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 const fetchInscricoes = async () => {
   try {
-    const response = await axios.get('http://localhost:3000/admin/inscricoes');
+    const response = await axios.get(`${API_URL}/admin/inscricoes`);
     inscricoes.value = response.data;
   } catch (error) {
     console.error('Erro ao buscar dados', error);
@@ -78,7 +79,7 @@ const fetchInscricoes = async () => {
 
 const updateStatus = async (id, action) => {
   try {
-    await axios.post(`http://localhost:3000/admin/inscricao/${id}/${action}`);
+    await axios.post(`${API_URL}/admin/inscricao/${id}/${action}`);
     // Refresh list or update local
     const index = inscricoes.value.findIndex(i => i._id === id);
     if (index !== -1) {
