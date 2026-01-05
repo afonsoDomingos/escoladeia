@@ -5,8 +5,35 @@
         <h1>Dashboard Admin</h1>
         <p>Gerenciamento de Inscrições</p>
       </div>
-      <button @click="$router.push('/admin/config')" class="btn-config">⚙️ Editar Site</button>
-      <button @click="logout" class="btn-logout">Sair</button>
+      
+      <!-- User Profile Dropdown -->
+      <div class="user-menu" ref="menuRef">
+        <button @click="showMenu = !showMenu" class="avatar-btn">
+          <div class="avatar-circle">A</div>
+        </button>
+
+        <transition name="fade">
+          <div v-if="showMenu" class="dropdown-menu">
+            <div class="menu-header">
+              <strong>Admin</strong>
+              <small>admin@escoladeia.com</small>
+            </div>
+            <ul>
+              <li>
+                <router-link to="/admin/config" class="menu-item" @click="showMenu = false">
+                  ⚙️ Configurações do Site
+                </router-link>
+              </li>
+              <li>
+                <button @click="logout" class="menu-item text-danger">
+                  ↪️ Sair
+                </button>
+              </li>
+            </ul>
+          </div>
+        </transition>
+      </div>
+
     </div>
 
     <!-- Stats Cards -->
@@ -82,7 +109,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 
@@ -90,6 +117,10 @@ const inscricoes = ref([]);
 const loading = ref(true);
 const router = useRouter();
 const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3000').trim();
+
+// Dropdown State
+const showMenu = ref(false);
+const menuRef = ref(null);
 
 const totalRevenue = computed(() => {
   return inscricoes.value
@@ -139,7 +170,20 @@ const logout = () => {
   router.push('/admin');
 };
 
-onMounted(fetchInscricoes);
+const closeMenu = (e) => {
+    if (menuRef.value && !menuRef.value.contains(e.target)) {
+        showMenu.value = false;
+    }
+}
+
+onMounted(() => {
+    fetchInscricoes();
+    document.addEventListener('click', closeMenu);
+});
+
+onUnmounted(() => {
+    document.removeEventListener('click', closeMenu);
+});
 </script>
 
 <style scoped>
@@ -156,32 +200,98 @@ onMounted(fetchInscricoes);
 
 .title-group h1 { margin: 0; }
 
-.btn-logout {
-  background: var(--text-light);
-  color: white;
+/* User Menu Dropdown Styles */
+.user-menu {
+  position: relative;
+}
+
+.avatar-btn {
+  background: none;
   border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
   cursor: pointer;
+  padding: 0;
+}
+
+.avatar-circle {
+  width: 40px;
+  height: 40px;
+  background-color: #0f172a; /* Dark Blue like image */
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: 250px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  border: 1px solid #eee;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.menu-header {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  background-color: #f8f9fa;
+}
+
+.menu-header strong {
+  display: block;
+  color: #333;
+}
+
+.menu-header small {
+  color: #666;
+}
+
+.dropdown-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-item {
+  display: block;
+  width: 100%;
+  padding: 12px 15px;
+  text-align: left;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #333;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: background 0.2s;
+}
+
+.menu-item:hover {
+  background-color: #f1f3f5;
+}
+
+.text-danger { color: #dc3545; }
+
+/* Fade Transition for Dropdown */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.2s;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
 }
 
 .table-responsive {
   overflow-x: auto;
 }
 
-.btn-config {
-  background: white;
-  color: var(--primary-color);
-  border: 1px solid var(--primary-color);
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-right: 10px;
-  font-weight: bold;
-}
-.btn-config:hover {
-  background: #fff3e0;
-}
 .muted { color: #888; font-size: 0.9em; }
 
 .link-view {
@@ -190,26 +300,6 @@ onMounted(fetchInscricoes);
   font-weight: bold;
 }
 
-.actions {
-  display: flex;
-  gap: 10px;
-}
-
-.btn-action {
-  width: 30px;
-  height: 30px;
-  border: none;
-  border-radius: 50%;
-  color: white;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-}
-
-.btn-approve { background-color: var(--success-color); }
-.btn-reject { background-color: var(--error-color); }
-
+.actions { display: flex; gap: 10px; }
 .action-done { font-size: 0.9em; color: var(--text-light); }
 </style>
