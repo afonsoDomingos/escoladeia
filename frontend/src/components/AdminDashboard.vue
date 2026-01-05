@@ -181,6 +181,9 @@ const fetchConfig = async () => {
     try {
         const response = await axios.get(`${API_URL}/config`);
         config.value = response.data;
+        if (config.value.primaryColor) {
+            document.documentElement.style.setProperty('--primary-color', config.value.primaryColor);
+        }
     } catch (error) {
         console.error('Erro ao carregar config', error);
     }

@@ -34,8 +34,8 @@
            <div class="form-group">
              <label>Cor Principal</label>
              <div style="display: flex; gap: 10px; align-items: center;">
-               <input v-model="config.primaryColor" type="color" style="width: 50px; height: 40px; padding: 0;">
-               <span>{{ config.primaryColor }}</span>
+               <input v-model="config.primaryColor" type="color" style="width: 50px; height: 40px; padding: 0; border: none; cursor: pointer;">
+               <input v-model="config.primaryColor" type="text" placeholder="#FF6600" style="width: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
              </div>
            </div>
            
