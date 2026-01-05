@@ -11,63 +11,55 @@
     <div class="card form-card">
       <form @submit.prevent="submitForm">
         
-        <!-- Personal Info -->
-        <div class="form-group">
-          <label for="nome">Nome Completo</label>
-          <input type="text" id="nome" v-model="form.nome" required placeholder="Seu nome completo">
-        </div>
-
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" v-model="form.email" required placeholder="seu@email.com">
-        </div>
-
-        <div class="form-group">
-          <label for="nivel">Nível do Aluno</label>
-          <select id="nivel" v-model="form.nivel" required>
-            <option disabled value="">Selecione...</option>
-            <option>Iniciante</option>
-            <option>Intermediário</option>
-            <option>Avançado</option>
-          </select>
-        </div>
-
-        <!-- Course Selection -->
-        <div class="form-group">
-          <label for="curso">Selecione o Curso</label>
-          <select id="curso" v-model="form.curso" @change="updateValor" required>
-            <option disabled value="">Escolha um curso</option>
-            <option v-for="curso in cursos" :key="curso.nome" :value="curso.nome">
-              {{ curso.nome }}
-            </option>
-          </select>
-        </div>
-
-        <!-- Course Details Display -->
-        <div v-if="selectedCursoDetails" class="course-details">
-          <p><strong>Valor:</strong> {{ selectedCursoDetails.valor }} MT</p>
-          <p class="muted">{{ selectedCursoDetails.desc }}</p>
-        </div>
-
-        <!-- Payment Instructions -->
-        <div class="payment-info">
-          <h3>Instruções de Pagamento</h3>
-          <div class="methods">
-            <div class="method">
-              <strong>Mpesa:</strong> 847877405 (Afonso Domingos)
-            </div>
-            <div class="method">
-              <strong>Emola:</strong> 879642412 (Afonso Domingos)
-            </div>
-            <div class="method">
-              <strong>BIM NIB:</strong> 000100000074301049557
-            </div>
-            <div class="method">
-              <strong>Paypal:</strong> karinganastudio23@gmail.com
-            </div>
+        <div class="form-grid">
+          <!-- Group 1: Personal -->
+          <div class="form-group">
+            <label for="nome">Nome Completo</label>
+            <input type="text" id="nome" v-model="form.nome" required placeholder="Seu nome completo">
           </div>
-          <p class="note">Realize o pagamento e anexe o comprovativo abaixo.</p>
-        </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" v-model="form.email" required placeholder="seu@email.com">
+          </div>
+
+          <!-- Group 2: Course Info -->
+          <div class="form-group">
+            <label for="nivel">Nível</label>
+            <select id="nivel" v-model="form.nivel" required>
+              <option disabled value="">Selecione...</option>
+              <option>Iniciante</option>
+              <option>Intermediário</option>
+              <option>Avançado</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="curso">Curso</label>
+            <select id="curso" v-model="form.curso" @change="updateValor" required>
+              <option disabled value="">Escolha um curso</option>
+              <option v-for="curso in cursos" :key="curso.nome" :value="curso.nome">
+                {{ curso.nome }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Course Details -->
+          <div v-if="selectedCursoDetails" class="course-details full-width">
+            <p><strong>Valor:</strong> {{ selectedCursoDetails.valor }} MT | <span class="muted">{{ selectedCursoDetails.desc }}</span></p>
+          </div>
+
+          <!-- Payment -->
+          <div class="payment-compact full-width">
+            <div style="margin-bottom: 5px;"><strong>Pagamento:</strong></div>
+             <div class="method-inline">📱 Mpesa: <strong>847877405</strong></div>
+             <div class="method-inline">📱 Emola: <strong>879642412</strong></div>
+             <div class="method-inline">🏦 BIM: <strong>000100000074301049557</strong></div>
+          </div>
+
+        </div> <!-- End Grid -->
+        
+        <p class="note" style="margin-bottom: 5px; margin-top: 15px;">Anexe o comprovativo abaixo:</p>
 
         <!-- File Upload -->
         <div class="form-group">

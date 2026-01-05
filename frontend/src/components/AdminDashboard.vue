@@ -2,24 +2,44 @@
   <div class="container admin-container">
     <div class="admin-header">
       <div class="title-group">
-        <h1>Dashboard</h1>
-        <p>Inscrições Recentes</p>
+        <h1>Dashboard Admin</h1>
+        <p>Gerenciamento de Inscrições</p>
       </div>
       <button @click="logout" class="btn-logout">Sair</button>
     </div>
 
-    <div v-if="loading" class="loading">Carregando...</div>
+    <!-- Stats Cards -->
+    <div class="stats-container">
+      <div class="stat-card">
+        <h3>{{ inscricoes.length }}</h3>
+        <p>Total Inscritos</p>
+      </div>
+      <div class="stat-card">
+        <h3>{{ inscricoes.filter(i => i.status === 'aprovado').length }}</h3>
+        <p>Aprovados</p>
+      </div>
+      <div class="stat-card">
+        <h3>{{ inscricoes.filter(i => i.status === 'pendente').length }}</h3>
+        <p>Pendentes</p>
+      </div>
+      <div class="stat-card" style="border-left-color: #28a745;">
+        <h3>{{ totalRevenue }} MT</h3>
+        <p>Receita Estimada</p>
+      </div>
+    </div>
+
+    <div v-if="loading" class="loading">Carregando dados...</div>
     <div v-else-if="inscricoes.length === 0" class="empty">Nenhuma inscrição encontrada.</div>
 
-    <div v-else class="table-responsive card">
-      <table class="admin-table">
+    <div v-else class="table-responsive">
+      <table class="modern-table">
         <thead>
           <tr>
             <th>Data</th>
-            <th>Aluno</th>
-            <th>Curso</th>
-            <th>Status</th>
+            <th>Aluno & Contato</th>
+            <th>Curso & Nível</th>
             <th>Comprovativo</th>
+            <th>Status</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -27,26 +47,30 @@
           <tr v-for="insc in inscricoes" :key="insc._id">
             <td>{{ formatDate(insc.dataInscricao) }}</td>
             <td>
-              <strong>{{ insc.nome }}</strong><br>
-              <span class="muted">{{ insc.email }}</span><br>
-              <small>{{ insc.nivel }}</small>
+              <div style="font-weight: bold;">{{ insc.nome }}</div>
+              <div class="muted">{{ insc.email }}</div>
             </td>
-            <td>{{ insc.curso }}<br><small>{{ insc.valor }} MT</small></td>
             <td>
-              <span :class="statusClass(insc.status)">{{ insc.status.toUpperCase() }}</span>
+              <div style="color: var(--primary-color); font-weight: 500;">{{ insc.curso }}</div>
+              <div class="muted">{{ insc.nivel }} • {{ insc.valor }} MT</div>
             </td>
             <td>
               <a :href="getFileUrl(insc.comprovativoPath)" target="_blank" class="link-view">
-                Ver Arquivo
+                 📄 Ver Anexo
               </a>
             </td>
             <td>
+              <span :class="['status-badge', statusClass(insc.status)]">
+                {{ insc.status.toUpperCase() }}
+              </span>
+            </td>
+            <td>
               <div class="actions" v-if="insc.status === 'pendente'">
-                <button @click="updateStatus(insc._id, 'aprovar')" class="btn-action btn-approve">✓</button>
-                <button @click="updateStatus(insc._id, 'rejeitar')" class="btn-action btn-reject">✗</button>
+                <button @click="updateStatus(insc._id, 'aprovar')" class="btn-icon btn-check" title="Aprovar">✓</button>
+                <button @click="updateStatus(insc._id, 'rejeitar')" class="btn-icon btn-cross" title="Rejeitar">✕</button>
               </div>
               <span v-else class="action-done">
-                {{ insc.status === 'aprovado' ? 'Aprovado' : 'Rejeitado' }}
+                {{ insc.status === 'aprovado' ? 'Processado' : 'Rejeitado' }}
               </span>
             </td>
           </tr>
@@ -57,7 +81,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 
@@ -65,6 +89,13 @@ const inscricoes = ref([]);
 const loading = ref(true);
 const router = useRouter();
 const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3000').trim();
+
+const totalRevenue = computed(() => {
+  return inscricoes.value
+    .filter(i => i.status === 'aprovado')
+    .reduce((sum, i) => sum + (i.valor || 0), 0)
+    .toLocaleString('pt-MZ');
+});
 
 const fetchInscricoes = async () => {
   try {
