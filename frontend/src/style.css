@@ -286,9 +286,37 @@ h3 {
   margin-right: 15px;
 }
 
+
 .title-row {
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 5px;
+}
+
+.header-action-row {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-whatsapp-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: transparent;
+  color: #25D366;
+  border: 2px solid #25D366;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.btn-whatsapp-outline:hover {
+  background-color: #25D366;
+  color: white;
+  transform: translateY(-1px);
 }

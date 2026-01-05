@@ -9,6 +9,13 @@
           <h1>{{ config.titulo || 'Escola de IA' }}</h1>
         </div>
         <p class="subtitle">{{ config.subtitulo || 'Inscrição no Treinamento' }}</p>
+        
+        <!-- Join Link in Header (Pre-Enrollment) -->
+        <div v-if="config.redirectUrl" class="header-action-row">
+          <a :href="config.redirectUrl" target="_blank" class="btn-whatsapp-outline">
+            <span>💬</span> Entrar no Grupo / Comunidade
+          </a>
+        </div>
       </div>
 
       <div class="card form-card">
@@ -123,6 +130,7 @@ const config = ref({
     camposExtras: [],
     primaryColor: '#FF6600',
     logoUrl: '/logo.jpg',
+    redirectUrl: '',
     labels: {} 
 });
 const loadingConfig = ref(true);
