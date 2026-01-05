@@ -167,15 +167,18 @@ const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3000').trim()
 const fetchConfig = async () => {
   try {
     const response = await axios.get(`${API_URL}/config`);
-    // Ensure arrays and objects exist
+    const data = response.data || {};
+    
+    // Ensure all fields are initialized correctly
     config.value = {
-      ...response.data,
-      cursos: response.data.cursos || [],
-      camposExtras: response.data.camposExtras || [],
-      labels: response.data.labels || { nome: 'Nome Completo', email: 'Email', nivel: 'Nível', curso: 'Curso' },
-      logoUrl: response.data.logoUrl || '/logo.jpg',
-      primaryColor: response.data.primaryColor || '#FF6600',
-      redirectUrl: response.data.redirectUrl || ''
+      titulo: data.titulo || 'Escola de IA',
+      subtitulo: data.subtitulo || 'Inscrição no Treinamento',
+      cursos: data.cursos || [],
+      camposExtras: data.camposExtras || [],
+      labels: data.labels || { nome: 'Nome Completo', email: 'Email', nivel: 'Nível', curso: 'Curso' },
+      logoUrl: data.logoUrl || '/logo.jpg',
+      primaryColor: data.primaryColor || '#FF6600',
+      redirectUrl: data.redirectUrl || ''
     };
 
   } catch (error) {
@@ -193,10 +196,19 @@ const saveConfig = async () => {
       if (!c.key) c.key = 'field_' + Date.now() + Math.random().toString(36).substr(2, 5);
     });
 
-    await axios.post(`${API_URL}/admin/config`, config.value);
+    console.log('Enviando para o servidor:', config.value);
+    const response = await axios.post(`${API_URL}/admin/config`, config.value);
+    
+    // Update local state with what's actually in DB
+    if (response.data.config) {
+        config.value = { ...response.data.config };
+    }
+    
     alert('Configurações salvas com sucesso!');
   } catch (error) {
-    alert('Erro ao salvar. Verifique se você está logado.');
+    console.error('Erro ao salvar:', error);
+    const msg = error.response?.data?.error || error.message;
+    alert('Erro ao salvar: ' + msg);
   } finally {
     saving.value = false;
   }

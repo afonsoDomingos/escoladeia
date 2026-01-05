@@ -75,7 +75,17 @@ seedConfig();
 // Get Configuration (Public)
 app.get('/config', async (req, res) => {
     try {
-        const config = await Config.findOne();
+        let config = await Config.findOne();
+        if (!config) {
+            // Return defaults if none found
+            return res.json({
+                titulo: 'Escola de IA',
+                subtitulo: 'Inscrição no Treinamento',
+                cursos: [],
+                camposExtras: [],
+                labels: { nome: 'Nome Completo', email: 'Email', nivel: 'Nível', curso: 'Curso' }
+            });
+        }
         res.json(config);
     } catch (error) {
         res.status(500).json({ error: 'Erro ao carregar configurações' });
@@ -85,15 +95,20 @@ app.get('/config', async (req, res) => {
 // Update Configuration (Admin)
 app.post('/admin/config', async (req, res) => {
     try {
-        const { titulo, subtitulo, cursos, camposExtras, primaryColor, logoUrl, labels, redirectUrl } = req.body;
-        console.log('Salvando configurações:', { titulo, redirectUrl });
+        const configData = { ...req.body };
+        delete configData._id;
+        delete configData.__v;
 
-        // Update the single config document
-        await Config.findOneAndUpdate({}, {
-            titulo, subtitulo, cursos, camposExtras, primaryColor, logoUrl, labels, redirectUrl
-        }, { upsert: true });
+        console.log('Recebido para salvar (sanitizado):', configData);
 
-        res.json({ success: true, message: 'Configuração atualizada!' });
+        const updated = await Config.findOneAndUpdate({}, configData, {
+            upsert: true,
+            new: true,
+            setDefaultsOnInsert: true
+        });
+
+        console.log('Configuração atualizada no banco:', updated);
+        res.json({ success: true, config: updated });
     } catch (error) {
         console.error('Erro ao salvar config:', error);
         res.status(500).json({ error: 'Erro ao salvar configurações' });
