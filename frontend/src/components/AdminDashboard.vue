@@ -9,7 +9,8 @@
       <!-- User Profile Dropdown -->
       <div class="user-menu" ref="menuRef">
         <button @click="showMenu = !showMenu" class="avatar-btn">
-          <div class="avatar-circle">A</div>
+          <img v-if="config.logoUrl" :src="config.logoUrl" class="avatar-img">
+          <div v-else class="avatar-circle">A</div>
         </button>
 
         <transition name="fade">
@@ -174,6 +175,17 @@ const byLevel = computed(() => {
     return stats;
 });
 
+const config = ref({});
+
+const fetchConfig = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/config`);
+        config.value = response.data;
+    } catch (error) {
+        console.error('Erro ao carregar config', error);
+    }
+};
+
 const fetchInscricoes = async () => {
   try {
     const response = await axios.get(`${API_URL}/admin/inscricoes`);
@@ -184,6 +196,12 @@ const fetchInscricoes = async () => {
     loading.value = false;
   }
 };
+
+onMounted(() => {
+    fetchConfig();
+    fetchInscricoes();
+    document.addEventListener('click', closeMenu);
+});
 
 const updateStatus = async (id, action) => {
   try {
@@ -221,10 +239,7 @@ const closeMenu = (e) => {
     }
 }
 
-onMounted(() => {
-    fetchInscricoes();
-    document.addEventListener('click', closeMenu);
-});
+
 
 onUnmounted(() => {
     document.removeEventListener('click', closeMenu);
@@ -399,5 +414,14 @@ onUnmounted(() => {
 
 .fill-secondary {
   background-color: #6c757d; /* Grey/Blue for Levels */
+}
+
+.avatar-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 </style>
