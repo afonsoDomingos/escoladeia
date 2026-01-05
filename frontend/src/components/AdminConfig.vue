@@ -204,7 +204,7 @@ const saveConfig = async () => {
         config.value = { ...response.data.config };
     }
     
-    alert('Configurações salvas com sucesso!');
+    alert(response.data.message || 'Configurações salvas com sucesso!');
   } catch (error) {
     console.error('Erro ao salvar:', error);
     const msg = error.response?.data?.error || error.message;

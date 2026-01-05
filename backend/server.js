@@ -108,7 +108,11 @@ app.post('/admin/config', async (req, res) => {
         });
 
         console.log('Configuração atualizada no banco:', updated);
-        res.json({ success: true, config: updated });
+        res.json({
+            success: true,
+            message: 'Configuração atualizada com sucesso! Link salvo: ' + (updated.redirectUrl || 'nenhum'),
+            config: updated
+        });
     } catch (error) {
         console.error('Erro ao salvar config:', error);
         res.status(500).json({ error: 'Erro ao salvar configurações' });
