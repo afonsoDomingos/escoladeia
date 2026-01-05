@@ -27,6 +27,52 @@
         </div>
       </div>
 
+      <!-- Seção: Aparência -->
+      <div class="card config-section">
+        <h3>Aparência</h3>
+        <div class="form-grid-mini">
+           <div class="form-group">
+             <label>Cor Principal</label>
+             <div style="display: flex; gap: 10px; align-items: center;">
+               <input v-model="config.primaryColor" type="color" style="width: 50px; height: 40px; padding: 0;">
+               <span>{{ config.primaryColor }}</span>
+             </div>
+           </div>
+           
+           <div class="form-group">
+             <label>Logo / Foto de Perfil</label>
+             <div style="display: flex; gap: 10px; align-items: center;">
+                <img :src="config.logoUrl || '/logo.jpg'" class="logo-preview">
+                <input type="file" @change="uploadLogo" accept="image/*">
+                <span v-if="uploadingLogo" class="muted-text">Enviando...</span>
+             </div>
+           </div>
+        </div>
+      </div>
+
+      <!-- Seção: Personalizar Etiquetas -->
+      <div class="card config-section">
+        <h3>Personalizar Campos Fixos (Etiquetas)</h3>
+        <div class="form-grid-mini">
+           <div class="form-group">
+             <label>Label para 'Nome'</label>
+             <input v-model="config.labels.nome">
+           </div>
+           <div class="form-group">
+             <label>Label para 'Email'</label>
+             <input v-model="config.labels.email">
+           </div>
+           <div class="form-group">
+             <label>Label para 'Nível'</label>
+             <input v-model="config.labels.nivel">
+           </div>
+           <div class="form-group">
+             <label>Label para 'Curso'</label>
+             <input v-model="config.labels.curso">
+           </div>
+        </div>
+      </div>
+
       <!-- Seção: Cursos -->
       <div class="card config-section">
         <div class="section-header">
@@ -90,22 +136,30 @@ const config = ref({
   titulo: '',
   subtitulo: '',
   cursos: [],
-  camposExtras: []
+  camposExtras: [],
+  primaryColor: '#FF6600',
+  logoUrl: '/logo.jpg',
+  labels: { nome: 'Nome Completo', email: 'Email', nivel: 'Nível', curso: 'Curso' }
 });
 
 const loading = ref(true);
 const saving = ref(false);
+const uploadingLogo = ref(false);
 const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3000').trim();
 
 const fetchConfig = async () => {
   try {
     const response = await axios.get(`${API_URL}/config`);
-    // Ensure arrays exist even if empty
+    // Ensure arrays and objects exist
     config.value = {
       ...response.data,
       cursos: response.data.cursos || [],
-      camposExtras: response.data.camposExtras || []
+      camposExtras: response.data.camposExtras || [],
+      labels: response.data.labels || { nome: 'Nome Completo', email: 'Email', nivel: 'Nível', curso: 'Curso' },
+      logoUrl: response.data.logoUrl || '/logo.jpg',
+      primaryColor: response.data.primaryColor || '#FF6600'
     };
+
   } catch (error) {
     console.error('Erro ao carregar config', error);
   } finally {
@@ -146,10 +200,38 @@ const removeCampo = (index) => {
   config.value.camposExtras.splice(index, 1);
 };
 
+const uploadLogo = async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  uploadingLogo.value = true;
+  const formData = new FormData();
+  formData.append('logo', file);
+
+  try {
+    const response = await axios.post(`${API_URL}/admin/upload-logo`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    config.value.logoUrl = response.data.url;
+  } catch (error) {
+    alert('Erro ao fazer upload da imagem.');
+  } finally {
+    uploadingLogo.value = false;
+  }
+};
+
 onMounted(fetchConfig);
 </script>
 
 <style scoped>
+.logo-preview {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
+}
+
 .header-actions {
   display: flex;
   gap: 10px;

@@ -5,7 +5,7 @@
     <div v-else>
       <div class="header">
         <div class="title-row">
-          <img src="/logo.jpg" alt="Logo" class="logo">
+          <img :src="config.logoUrl || '/logo.jpg'" alt="Logo" class="logo">
           <h1>{{ config.titulo || 'Escola de IA' }}</h1>
         </div>
         <p class="subtitle">{{ config.subtitulo || 'Inscrição no Treinamento' }}</p>
@@ -17,12 +17,12 @@
           <div class="form-grid">
             <!-- Core Fields -->
             <div class="form-group">
-              <label for="nome">Nome Completo</label>
-              <input type="text" id="nome" v-model="form.nome" required placeholder="Seu nome completo">
+              <label for="nome">{{ config.labels?.nome || 'Nome Completo' }}</label>
+              <input type="text" id="nome" v-model="form.nome" required :placeholder="config.labels?.nome || 'Seu nome'">
             </div>
 
             <div class="form-group">
-              <label for="email">Email</label>
+              <label for="email">{{ config.labels?.email || 'Email' }}</label>
               <input type="email" id="email" v-model="form.email" required placeholder="seu@email.com">
             </div>
 
@@ -38,7 +38,7 @@
             </div>
 
             <div class="form-group">
-              <label for="nivel">Nível</label>
+              <label for="nivel">{{ config.labels?.nivel || 'Nível' }}</label>
               <select id="nivel" v-model="form.nivel" required>
                 <option disabled value="">Selecione...</option>
                 <option>Iniciante</option>
@@ -48,7 +48,7 @@
             </div>
 
             <div class="form-group">
-              <label for="curso">Curso</label>
+              <label for="curso">{{ config.labels?.curso || 'Curso' }}</label>
               <select id="curso" v-model="form.curso" @change="updateValor" required>
                 <option disabled value="">Escolha um curso</option>
                 <option v-for="curso in config.cursos" :key="curso.nome" :value="curso.nome">
@@ -94,7 +94,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import axios from 'axios';
 
 const form = ref({
@@ -106,7 +106,15 @@ const form = ref({
 });
 
 const extras = ref({}); // Store dynamic field values { key: value }
-const config = ref({ titulo: '', subtitulo: '', cursos: [], camposExtras: [] });
+const config = ref({ 
+    titulo: '', 
+    subtitulo: '', 
+    cursos: [], 
+    camposExtras: [],
+    primaryColor: '#FF6600',
+    logoUrl: '/logo.jpg',
+    labels: {} 
+});
 const loadingConfig = ref(true);
 
 const file = ref(null);
@@ -121,6 +129,11 @@ onMounted(async () => {
     const response = await axios.get(`${API_URL}/config`);
     config.value = response.data;
     
+    // Apply Primary Color
+    if (config.value.primaryColor) {
+        document.documentElement.style.setProperty('--primary-color', config.value.primaryColor);
+    }
+
     // Initialize extras
     if (config.value && config.value.camposExtras) {
         config.value.camposExtras.forEach(campo => {

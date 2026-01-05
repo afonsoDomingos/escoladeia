@@ -83,22 +83,32 @@ app.get('/config', async (req, res) => {
 });
 
 // Update Configuration (Admin)
+// Update Configuration (Admin)
 app.post('/admin/config', async (req, res) => {
     try {
-        // Simple verification (in production use middleware)
-        // Here we assume mostly safe environment or handling by frontend auth logic mostly
-        // Ideally pass token here too. For now open as requested "admin area possibility"
-
-        const { titulo, subtitulo, cursos, camposExtras } = req.body;
+        const { titulo, subtitulo, cursos, camposExtras, primaryColor, logoUrl, labels } = req.body;
 
         // Update the single config document
         await Config.findOneAndUpdate({}, {
-            titulo, subtitulo, cursos, camposExtras
+            titulo, subtitulo, cursos, camposExtras, primaryColor, logoUrl, labels
         }, { upsert: true });
 
         res.json({ success: true, message: 'Configuração atualizada!' });
     } catch (error) {
         res.status(500).json({ error: 'Erro ao salvar configurações' });
+    }
+});
+
+// Upload Logo (Admin)
+app.post('/admin/upload-logo', upload.single('logo'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: 'Nenhum arquivo enviado.' });
+        }
+        res.json({ url: req.file.path });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Erro ao fazer upload do logo.' });
     }
 });
 
