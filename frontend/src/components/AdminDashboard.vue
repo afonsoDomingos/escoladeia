@@ -5,6 +5,7 @@
         <h1>Dashboard Admin</h1>
         <p>Gerenciamento de Inscrições</p>
       </div>
+      <button @click="$router.push('/admin/config')" class="btn-config">⚙️ Editar Site</button>
       <button @click="logout" class="btn-logout">Sair</button>
     </div>
 
@@ -168,6 +169,19 @@ onMounted(fetchInscricoes);
   overflow-x: auto;
 }
 
+.btn-config {
+  background: white;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+  font-weight: bold;
+}
+.btn-config:hover {
+  background: #fff3e0;
+}
 .muted { color: #888; font-size: 0.9em; }
 
 .link-view {

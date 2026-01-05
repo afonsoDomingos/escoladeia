@@ -1,87 +1,100 @@
 <template>
   <div class="container fade-in">
-    <div class="header">
-      <div class="title-row">
-        <img src="/logo.jpg" alt="Logo" class="logo">
-        <h1>Escola de IA</h1>
+    <div v-if="loadingConfig" class="loading-center">Carregando formulário...</div>
+    
+    <div v-else>
+      <div class="header">
+        <div class="title-row">
+          <img src="/logo.jpg" alt="Logo" class="logo">
+          <h1>{{ config.titulo || 'Escola de IA' }}</h1>
+        </div>
+        <p class="subtitle">{{ config.subtitulo || 'Inscrição no Treinamento' }}</p>
       </div>
-      <p class="subtitle">Inscrição no Treinamento</p>
-    </div>
 
-    <div class="card form-card">
-      <form @submit.prevent="submitForm">
-        
-        <div class="form-grid">
-          <!-- Group 1: Personal -->
+      <div class="card form-card">
+        <form @submit.prevent="submitForm">
+          
+          <div class="form-grid">
+            <!-- Core Fields -->
+            <div class="form-group">
+              <label for="nome">Nome Completo</label>
+              <input type="text" id="nome" v-model="form.nome" required placeholder="Seu nome completo">
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" v-model="form.email" required placeholder="seu@email.com">
+            </div>
+
+            <!-- Dynamic Fields (Extras) -->
+            <div v-for="campo in config.camposExtras" :key="campo.key" class="form-group" :class="{'full-width': campo.tipo === 'textarea'}">
+              <label>{{ campo.label }}</label>
+              
+              <input v-if="campo.tipo === 'text'" type="text" v-model="extras[campo.key]" :required="campo.required">
+              
+              <input v-if="campo.tipo === 'number'" type="number" v-model="extras[campo.key]" :required="campo.required">
+              
+              <textarea v-if="campo.tipo === 'textarea'" v-model="extras[campo.key]" :required="campo.required" rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="nivel">Nível</label>
+              <select id="nivel" v-model="form.nivel" required>
+                <option disabled value="">Selecione...</option>
+                <option>Iniciante</option>
+                <option>Intermediário</option>
+                <option>Avançado</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="curso">Curso</label>
+              <select id="curso" v-model="form.curso" @change="updateValor" required>
+                <option disabled value="">Escolha um curso</option>
+                <option v-for="curso in config.cursos" :key="curso.nome" :value="curso.nome">
+                  {{ curso.nome }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Course Details -->
+            <div v-if="selectedCursoDetails" class="course-details full-width">
+              <p><strong>Valor:</strong> {{ selectedCursoDetails.valor }} MT | <span class="muted">{{ selectedCursoDetails.desc }}</span></p>
+            </div>
+
+            <!-- Payment -->
+            <div class="payment-compact full-width">
+              <div style="margin-bottom: 5px;"><strong>Pagamento:</strong></div>
+               <div class="method-inline">📱 Mpesa: <strong>847877405</strong></div>
+               <div class="method-inline">📱 Emola: <strong>879642412</strong></div>
+               <div class="method-inline">🏦 BIM: <strong>000100000074301049557</strong></div>
+            </div>
+
+          </div> <!-- End Grid -->
+          
+          <p class="note" style="margin-bottom: 5px; margin-top: 15px;">Anexe o comprovativo abaixo:</p>
+
+          <!-- File Upload -->
           <div class="form-group">
-            <label for="nome">Nome Completo</label>
-            <input type="text" id="nome" v-model="form.nome" required placeholder="Seu nome completo">
+             <input type="file" id="comprovativo" ref="fileInput" @change="handleFileUpload" required accept="image/*,.pdf">
           </div>
 
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" v-model="form.email" required placeholder="seu@email.com">
+          <!-- Feedback Messages -->
+          <div v-if="message" :class="['feedback', messageType]">
+            {{ message }}
           </div>
 
-          <!-- Group 2: Course Info -->
-          <div class="form-group">
-            <label for="nivel">Nível</label>
-            <select id="nivel" v-model="form.nivel" required>
-              <option disabled value="">Selecione...</option>
-              <option>Iniciante</option>
-              <option>Intermediário</option>
-              <option>Avançado</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="curso">Curso</label>
-            <select id="curso" v-model="form.curso" @change="updateValor" required>
-              <option disabled value="">Escolha um curso</option>
-              <option v-for="curso in cursos" :key="curso.nome" :value="curso.nome">
-                {{ curso.nome }}
-              </option>
-            </select>
-          </div>
-
-          <!-- Course Details -->
-          <div v-if="selectedCursoDetails" class="course-details full-width">
-            <p><strong>Valor:</strong> {{ selectedCursoDetails.valor }} MT | <span class="muted">{{ selectedCursoDetails.desc }}</span></p>
-          </div>
-
-          <!-- Payment -->
-          <div class="payment-compact full-width">
-            <div style="margin-bottom: 5px;"><strong>Pagamento:</strong></div>
-             <div class="method-inline">📱 Mpesa: <strong>847877405</strong></div>
-             <div class="method-inline">📱 Emola: <strong>879642412</strong></div>
-             <div class="method-inline">🏦 BIM: <strong>000100000074301049557</strong></div>
-          </div>
-
-        </div> <!-- End Grid -->
-        
-        <p class="note" style="margin-bottom: 5px; margin-top: 15px;">Anexe o comprovativo abaixo:</p>
-
-        <!-- File Upload -->
-        <div class="form-group">
-          <label for="comprovativo">Comprovativo de Pagamento (PDF ou Imagem)</label>
-          <input type="file" id="comprovativo" ref="fileInput" @change="handleFileUpload" required accept="image/*,.pdf">
-        </div>
-
-        <!-- Feedback Messages -->
-        <div v-if="message" :class="['feedback', messageType]">
-          {{ message }}
-        </div>
-
-        <button type="submit" class="btn" :disabled="loading">
-          {{ loading ? 'Enviando...' : 'Confirmar Inscrição' }}
-        </button>
-      </form>
+          <button type="submit" class="btn" :disabled="loading">
+            {{ loading ? 'Enviando...' : 'Confirmar Inscrição' }}
+          </button>
+        </form>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 
 const form = ref({
@@ -92,20 +105,38 @@ const form = ref({
   valor: 0
 });
 
+const extras = ref({}); // Store dynamic field values { key: value }
+const config = ref({ titulo: '', subtitulo: '', cursos: [], camposExtras: [] });
+const loadingConfig = ref(true);
+
 const file = ref(null);
 const message = ref('');
-const messageType = ref(''); // 'success' or 'error'
+const messageType = ref('');
 const loading = ref(false);
 const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3000').trim();
 
-const cursos = [
-  { nome: 'IA na Programação', valor: 2500, desc: '3 módulos, 10 aulas/módulo (10min). Certificado incluso.' },
-  { nome: 'IA no Marketing', valor: 1500, desc: '3 módulos, 10 aulas/módulo (10min). Certificado incluso.' },
-  { nome: 'IA no Design', valor: 1500, desc: '3 módulos, 10 aulas/módulo (10min). Certificado incluso.' }
-];
+// Fetch form configuration on load
+onMounted(async () => {
+  try {
+    const response = await axios.get(`${API_URL}/config`);
+    config.value = response.data;
+    
+    // Initialize extras
+    if (config.value && config.value.camposExtras) {
+        config.value.camposExtras.forEach(campo => {
+            extras.value[campo.key] = '';
+        });
+    }
+  } catch (error) {
+    console.error('Erro ao carregar configurações', error);
+  } finally {
+    loadingConfig.value = false;
+  }
+});
 
 const selectedCursoDetails = computed(() => {
-  return cursos.find(c => c.nome === form.value.curso);
+  if (!config.value.cursos) return null;
+  return config.value.cursos.find(c => c.nome === form.value.curso);
 });
 
 const updateValor = () => {
@@ -119,14 +150,12 @@ const handleFileUpload = (event) => {
 };
 
 const submitForm = async () => {
-  // 1. Validar Campos de Texto
   if (!form.value.nome || !form.value.email || !form.value.nivel || !form.value.curso) {
     message.value = 'Por favor, preencha todos os campos obrigatórios.';
     messageType.value = 'error';
     return;
   }
 
-  // 2. Validar Comprovativo (Obrigatório)
   if (!file.value) {
     message.value = 'O envio do comprovativo de pagamento é OBRIGATÓRIO.';
     messageType.value = 'error';
@@ -143,6 +172,9 @@ const submitForm = async () => {
   formData.append('curso', form.value.curso);
   formData.append('valor', form.value.valor);
   formData.append('comprovativo', file.value);
+  
+  // Serialize dynamic fields
+  formData.append('dadosExtras', JSON.stringify(extras.value));
 
   try {
     const response = await axios.post(`${API_URL}/inscricao`, formData, {
@@ -150,10 +182,14 @@ const submitForm = async () => {
     });
     message.value = response.data.message;
     messageType.value = 'success';
+    
     // Reset form
     form.value = { nome: '', email: '', nivel: '', curso: '', valor: 0 };
     file.value = null;
-    document.getElementById('comprovativo').value = ''; // Reset input
+    document.getElementById('comprovativo').value = '';
+    // Reset extras
+    Object.keys(extras.value).forEach(key => extras.value[key] = '');
+    
   } catch (error) {
     console.error(error);
     message.value = error.response?.data?.error || 'Erro ao enviar inscrição.';

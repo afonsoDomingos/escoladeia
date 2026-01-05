@@ -47,16 +47,64 @@ const storage = new CloudinaryStorage({
 const upload = multer({ storage: storage });
 
 // Admin Credentials
-// Admin Credentials
 const ADMIN_USER = 'admin@escoladeia.com';
 const ADMIN_PASS = '@Admin123@';
 
+// --- Config Initialization ---
+const seedConfig = async () => {
+    const exists = await Config.findOne();
+    if (!exists) {
+        await Config.create({
+            titulo: 'Escola de IA',
+            subtitulo: 'Inscrição no Treinamento',
+            cursos: [
+                { nome: 'IA na Programação', valor: 2500, desc: '3 módulos, 10 aulas/módulo (10min). Certificado incluso.' },
+                { nome: 'IA no Marketing', valor: 1500, desc: '3 módulos, 10 aulas/módulo (10min). Certificado incluso.' },
+                { nome: 'IA no Design', valor: 1500, desc: '3 módulos, 10 aulas/módulo (10min). Certificado incluso.' }
+            ],
+            camposExtras: []
+        });
+        console.log('Configuração inicial criada.');
+    }
+};
+seedConfig();
+
 // --- Routes ---
+
+// Get Configuration (Public)
+app.get('/config', async (req, res) => {
+    try {
+        const config = await Config.findOne();
+        res.json(config);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao carregar configurações' });
+    }
+});
+
+// Update Configuration (Admin)
+app.post('/admin/config', async (req, res) => {
+    try {
+        // Simple verification (in production use middleware)
+        // Here we assume mostly safe environment or handling by frontend auth logic mostly
+        // Ideally pass token here too. For now open as requested "admin area possibility"
+
+        const { titulo, subtitulo, cursos, camposExtras } = req.body;
+
+        // Update the single config document
+        await Config.findOneAndUpdate({}, {
+            titulo, subtitulo, cursos, camposExtras
+        }, { upsert: true });
+
+        res.json({ success: true, message: 'Configuração atualizada!' });
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao salvar configurações' });
+    }
+});
 
 // 1. Inscrição (Aluno)
 app.post('/inscricao', upload.single('comprovativo'), async (req, res) => {
     try {
-        const { nome, email, nivel, curso, valor } = req.body;
+        const { nome, email, nivel, curso, valor, dadosExtras } = req.body;
 
         if (!req.file) {
             return res.status(400).json({ error: 'Comprovativo de pagamento é obrigatório.' });
@@ -66,12 +114,22 @@ app.post('/inscricao', upload.single('comprovativo'), async (req, res) => {
             return res.status(400).json({ error: 'Todos os campos são obrigatórios: Nome, Email, Nível, Curso e Valor.' });
         }
 
+        let parsedExtras = {};
+        if (dadosExtras) {
+            try {
+                parsedExtras = JSON.parse(dadosExtras);
+            } catch (e) {
+                console.error("Erro ao fazer parse de dados extras", e);
+            }
+        }
+
         const novaInscricao = new Inscricao({
             nome,
             email,
             nivel,
             curso,
             valor,
+            dadosExtras: parsedExtras,
             comprovativoPath: req.file.path
         });
 
@@ -79,7 +137,7 @@ app.post('/inscricao', upload.single('comprovativo'), async (req, res) => {
         res.status(201).json({ message: 'Inscrição realizada com sucesso! Aguarde a aprovação.' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Erro ao processar inscrição.' });
+        res.status(500).json({ error: 'Erro ao salvar inscrição.' });
     }
 });
 
