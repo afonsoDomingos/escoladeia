@@ -4,7 +4,7 @@
       <h1>Editor de Formulário</h1>
       <div class="header-actions">
         <router-link to="/admin/dashboard" class="btn-back">Voltar</router-link>
-        <button @click="saveConfig" class="btn" :disabled="saving">
+        <button @click="saveConfig" class="btn-primary" :disabled="saving">
           {{ saving ? 'Salvando...' : 'Salvar Alterações' }}
         </button>
       </div>
@@ -288,13 +288,40 @@ onMounted(fetchConfig);
 }
 
 .input-dynamic { flex: 2; }
-.input-small { width: 120px; } /* Slightly wider */
+.input-small { width: 120px; } 
+
+/* Improved Button Small (+ Buttons) */
+.btn-small {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.2s, transform 0.1s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-small:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.btn-small:active {
+  transform: translateY(0);
+}
 
 /* Improved Back Button */
 .btn-back {
   display: inline-flex;
   align-items: center;
-  padding: 10px 20px;
+  justify-content: center;
+  padding: 0 20px;
+  height: 42px; /* Fixed height for alignment */
   text-decoration: none;
   color: #555;
   background: white;
@@ -302,6 +329,7 @@ onMounted(fetchConfig);
   border-radius: 6px;
   font-weight: 500;
   transition: all 0.2s;
+  font-size: 0.95rem;
 }
 
 .btn-back:hover {
@@ -310,13 +338,47 @@ onMounted(fetchConfig);
   color: #333;
 }
 
+/* Primary Save Button */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px; /* Same height as back button */
+  padding: 0 24px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Improved Trash Icon */
 .btn-icon-trash {
   background: white;
   border: 1px solid #fee;
   color: #dc3545;
   cursor: pointer;
   font-size: 1rem;
-  width: 36px;
+  min-width: 36px;
   height: 36px;
   border-radius: 6px;
   display: flex;
@@ -329,5 +391,31 @@ onMounted(fetchConfig);
   background-color: #fff5f5;
   border-color: #dc3545;
   transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(220, 53, 69, 0.15);
+}
+
+.item-card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #eee;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+
+.form-grid-mini {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.actions-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #f9f9f9;
 }
 </style>
+```

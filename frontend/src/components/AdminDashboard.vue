@@ -9,7 +9,12 @@
       <!-- User Profile Dropdown -->
       <div class="user-menu" ref="menuRef">
         <button @click="showMenu = !showMenu" class="avatar-btn">
-          <img v-if="config.logoUrl" :src="config.logoUrl" class="avatar-img">
+          <img 
+            v-if="config.logoUrl && !imageError" 
+            :src="config.logoUrl" 
+            class="avatar-img" 
+            @error="handleImageError"
+          >
           <div v-else class="avatar-circle">A</div>
         </button>
 
@@ -176,11 +181,17 @@ const byLevel = computed(() => {
 });
 
 const config = ref({});
+const imageError = ref(false);
+
+const handleImageError = () => {
+  imageError.value = true;
+};
 
 const fetchConfig = async () => {
     try {
         const response = await axios.get(`${API_URL}/config`);
         config.value = response.data;
+        imageError.value = false; // Reset error on new config load
         if (config.value.primaryColor) {
             document.documentElement.style.setProperty('--primary-color', config.value.primaryColor);
         }
