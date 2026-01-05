@@ -83,10 +83,10 @@ app.get('/config', async (req, res) => {
 });
 
 // Update Configuration (Admin)
-// Update Configuration (Admin)
 app.post('/admin/config', async (req, res) => {
     try {
         const { titulo, subtitulo, cursos, camposExtras, primaryColor, logoUrl, labels, redirectUrl } = req.body;
+        console.log('Salvando configurações:', { titulo, redirectUrl });
 
         // Update the single config document
         await Config.findOneAndUpdate({}, {
@@ -95,6 +95,7 @@ app.post('/admin/config', async (req, res) => {
 
         res.json({ success: true, message: 'Configuração atualizada!' });
     } catch (error) {
+        console.error('Erro ao salvar config:', error);
         res.status(500).json({ error: 'Erro ao salvar configurações' });
     }
 });

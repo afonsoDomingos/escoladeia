@@ -55,7 +55,7 @@
         <h3>Pós-Inscrição (Redirecionamento)</h3>
         <div class="form-group">
           <label>Link para Grupo/Site (Opcional)</label>
-          <input v-model="config.redirectUrl" type="url" placeholder="https://chat.whatsapp.com/..." class="full-width">
+          <input v-model="config.redirectUrl" type="text" placeholder="https://chat.whatsapp.com/..." class="full-width">
           <small class="muted-text">Se preenchido, o aluno verá um botão para acessar este link após se inscrever com sucesso.</small>
         </div>
       </div>
@@ -155,6 +155,7 @@ const config = ref({
   camposExtras: [],
   primaryColor: '#FF6600',
   logoUrl: '/logo.jpg',
+  redirectUrl: '',
   labels: { nome: 'Nome Completo', email: 'Email', nivel: 'Nível', curso: 'Curso' }
 });
 
