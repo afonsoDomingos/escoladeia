@@ -315,13 +315,19 @@ onMounted(fetchConfig);
   transform: translateY(0);
 }
 
+/* Main Container */
+.admin-container {
+  max-width: 800px; /* Wider than 600px but focused */
+  margin: 0 auto;
+}
+
 /* Improved Back Button */
 .btn-back {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0 20px;
-  height: 42px; /* Fixed height for alignment */
+  padding: 0 16px;
+  height: 38px; /* Compact height */
   text-decoration: none;
   color: #555;
   background: white;
@@ -329,7 +335,7 @@ onMounted(fetchConfig);
   border-radius: 6px;
   font-weight: 500;
   transition: all 0.2s;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 .btn-back:hover {
@@ -343,14 +349,14 @@ onMounted(fetchConfig);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 42px; /* Same height as back button */
-  padding: 0 24px;
+  height: 38px; /* Matching height */
+  padding: 0 20px;
   background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 6px;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   cursor: pointer;
   transition: background-color 0.2s, transform 0.1s;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
