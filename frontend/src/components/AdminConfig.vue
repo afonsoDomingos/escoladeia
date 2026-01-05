@@ -132,6 +132,12 @@
           </div>
         </div>
       </div>
+      <!-- Floating Bottom Save Button -->
+      <div class="actions-footer">
+          <button @click="saveConfig" class="btn-primary full-width-mobile" :disabled="saving">
+            {{ saving ? 'Salvando...' : 'Salvar Todas as Alterações' }}
+          </button>
+      </div>
 
     </div>
   </div>
@@ -425,6 +431,20 @@ onMounted(fetchConfig);
   margin-top: 15px;
   padding-top: 10px;
   border-top: 1px solid #f9f9f9;
+}
+
+.actions-footer {
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 20px;
+  border-top: 2px solid #f0f0f0;
+}
+
+@media (max-width: 600px) {
+  .full-width-mobile {
+    width: 100%;
+  }
 }
 </style>
 ```
