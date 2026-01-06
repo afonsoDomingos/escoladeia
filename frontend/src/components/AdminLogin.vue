@@ -12,7 +12,7 @@
           <div class="form-group">
             <label for="username">Usuário / Email</label>
             <div class="input-with-icon">
-              <span class="icon">👤</span>
+              <span class="icon icon-gold">👤</span>
               <input 
                 type="text" 
                 id="username" 
@@ -26,7 +26,7 @@
           <div class="form-group">
             <label for="password">Senha de Acesso</label>
             <div class="input-with-icon">
-              <span class="icon">🔒</span>
+              <span class="icon icon-gold">🔒</span>
               <input 
                 type="password" 
                 id="password" 

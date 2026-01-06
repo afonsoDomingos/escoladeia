@@ -350,3 +350,17 @@ h3 {
     justify-content: center;
   }
 }
+
+/* Golden Icons Style */
+.icon-gold {
+  color: #d4af37;
+  /* Classic Gold */
+  background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+  -webkit-background-clip: text;
+  background-clip: text;
+  /* Added for compatibility */
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  font-weight: bold;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+}

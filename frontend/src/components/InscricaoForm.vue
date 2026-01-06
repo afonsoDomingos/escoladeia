@@ -14,7 +14,7 @@
         <div v-if="!messageType || messageType !== 'success'">
           <div v-if="config.redirectUrl" class="header-action-row">
             <a :href="config.redirectUrl" target="_blank" class="btn-whatsapp-outline">
-              <span>💬</span> Entrar no Grupo / Comunidade
+              <span class="icon-gold">💬</span> Entrar no Grupo / Comunidade
             </a>
           </div>
         </div>
@@ -94,12 +94,12 @@
             
             <div v-if="messageType === 'success'" class="success-actions-block">
                <p v-if="config.contactPhone" class="contact-prompt">
-                 📞 Mais informações: <strong>{{ config.contactPhone }}</strong>
+                 <span class="icon-gold">📞</span> Mais informações: <strong>{{ config.contactPhone }}</strong>
                </p>
                
                <div class="success-btns">
                  <a v-if="config.redirectUrl" :href="config.redirectUrl" target="_blank" class="btn-redirect">
-                   🚀 Entrar no Grupo
+                   <span class="icon-gold">🚀</span> Entrar no Grupo
                  </a>
                  <button @click="resetFormState" class="btn-secondary">Fazer Nova Inscrição</button>
                </div>

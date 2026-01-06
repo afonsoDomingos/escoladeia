@@ -27,12 +27,12 @@
             <ul>
               <li>
                 <router-link to="/admin/config" class="menu-item" @click="showMenu = false">
-                  ⚙️ Configurações do Site
+                  <span class="icon-gold">⚙️</span> Configurações do Site
                 </router-link>
               </li>
               <li>
                 <button @click="logout" class="menu-item text-danger">
-                  ↪️ Sair
+                  <span class="icon-gold">↪️</span> Sair
                 </button>
               </li>
             </ul>
@@ -45,19 +45,31 @@
     <!-- Stats Cards -->
     <div class="stats-container">
       <div class="stat-card">
-        <h3>{{ inscricoes.length }}</h3>
+        <div class="stat-icon-row">
+           <span class="icon-gold" style="font-size: 1.5rem;">🎯</span>
+           <h3>{{ inscricoes.length }}</h3>
+        </div>
         <p>Total Inscritos</p>
       </div>
       <div class="stat-card">
-        <h3>{{ inscricoes.filter(i => i.status === 'aprovado').length }}</h3>
+        <div class="stat-icon-row">
+           <span class="icon-gold" style="font-size: 1.5rem;">✅</span>
+           <h3>{{ inscricoes.filter(i => i.status === 'aprovado').length }}</h3>
+        </div>
         <p>Aprovados</p>
       </div>
       <div class="stat-card">
-        <h3>{{ inscricoes.filter(i => i.status === 'pendente').length }}</h3>
+        <div class="stat-icon-row">
+           <span class="icon-gold" style="font-size: 1.5rem;">🕒</span>
+           <h3>{{ inscricoes.filter(i => i.status === 'pendente').length }}</h3>
+        </div>
         <p>Pendentes</p>
       </div>
       <div class="stat-card" style="border-left-color: #28a745;">
-        <h3>{{ totalRevenue }} MT</h3>
+        <div class="stat-icon-row">
+           <span class="icon-gold" style="font-size: 1.5rem;">💰</span>
+           <h3>{{ totalRevenue }} MT</h3>
+        </div>
         <p>Receita Estimada</p>
       </div>
     </div>
@@ -311,6 +323,29 @@ onUnmounted(() => {
   border: 1px solid #eee;
   z-index: 100;
   overflow: hidden;
+}
+
+.stat-card {
+  background-color: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  border-left: 5px solid var(--primary-color);
+  flex: 1;
+  min-width: 150px;
+}
+
+.stat-icon-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 5px;
+}
+
+.stat-card h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #1a1a1b;
 }
 
 .menu-header {
